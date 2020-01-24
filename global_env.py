@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-#frx
 import os
 import pickle
 

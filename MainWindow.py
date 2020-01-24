@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-#frx
 
 # Form implementation generated from reading ui file 'untitled.ui'
 #

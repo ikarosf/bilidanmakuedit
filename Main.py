@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-#frx
 
 import sys
 from PySide2.QtWidgets import QApplication, QMainWindow, QMessageBox
