@@ -7,6 +7,7 @@ from MainWindow import *
 import global_env
 import action_def
 import logging
+import resource_rc
 
 
 class MyWindow(QMainWindow, Ui_MainWindow):
@@ -14,7 +15,7 @@ class MyWindow(QMainWindow, Ui_MainWindow):
         super(MyWindow, self).__init__(parent)
         self.setupUi(self)
         self.setAcceptDrops(True)
-        self.setWindowIcon(QtGui.QIcon('file_edit1.ico'))
+        self.setWindowIcon(QtGui.QIcon(':/file_edit1.ico'))
 
     def closeEvent(self, event):
         if not global_env.data_saved:
@@ -67,7 +68,7 @@ class MyWindow(QMainWindow, Ui_MainWindow):
 if __name__ == '__main__':
     logging.basicConfig(format='%(asctime)s - %(pathname)s[line:%(lineno)d] - %(levelname)s: %(message)s',
                         datefmt="%Y/%d/%m %H:%M:%S",
-                        level=logging.DEBUG)
+                        level=logging.CRITICAL)
     app = QApplication(sys.argv)
     myWin = MyWindow()
     global_env.myWin = myWin
