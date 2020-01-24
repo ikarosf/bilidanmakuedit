@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-
+#frx
 from PySide2 import QtCore, QtGui, QtWidgets
 import global_env
 
