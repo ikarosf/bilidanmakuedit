@@ -35,7 +35,6 @@ class Ui_MainWindow(object):
         self.tableWidget.itemClicked.connect(action_def.tableWidgetItemClick)
         self.tableWidget.setEditTriggers(QtWidgets.QAbstractItemView.NoEditTriggers)
 
-
         item = QtWidgets.QTableWidgetItem()
         self.tableWidget.setHorizontalHeaderItem(0, item)
         # 列宽度自动
@@ -52,6 +51,10 @@ class Ui_MainWindow(object):
         self.reverse_election_button.setMinimumSize(QtCore.QSize(0, 30))
         self.reverse_election_button.setObjectName("reverse_election")
         self.reverse_election_button.clicked.connect(action_def.reverse_election)
+        # self.reverse_election_button.setShortcut(QtGui.QKeySequence(QtGui.Qt.CTRL+QtGui.Qt.Key_S))
+        # self.reverse_election_button.setShortcut("Ctrl+S")
+        reverse_election_button_shortcut = QtWidgets.QShortcut(QtGui.QKeySequence("Ctrl+A"), self)
+        reverse_election_button_shortcut.activated.connect(self.reverse_election_button.clicked)
         self.horizontalLayout.addWidget(self.reverse_election_button)
 
         self.pushButton_2 = QtWidgets.QPushButton(self.centralwidget)
@@ -68,12 +71,16 @@ class Ui_MainWindow(object):
         self.previous_page_button.setMinimumSize(QtCore.QSize(0, 30))
         self.previous_page_button.setObjectName("previous_page")
         self.previous_page_button.clicked.connect(action_def.previous_page)
+        previous_page_button_shortcut = QtWidgets.QShortcut(QtGui.QKeySequence(QtCore.Qt.Key_PageUp), self)
+        previous_page_button_shortcut.activated.connect(self.previous_page_button.clicked)
         self.horizontalLayout.addWidget(self.previous_page_button)
 
         self.next_page_button = QtWidgets.QPushButton(self.centralwidget)
         self.next_page_button.setMinimumSize(QtCore.QSize(0, 30))
         self.next_page_button.setObjectName("next_page")
         self.next_page_button.clicked.connect(action_def.next_page)
+        next_page_button_shortcut = QtWidgets.QShortcut(QtGui.QKeySequence(QtCore.Qt.Key_PageDown), self)
+        next_page_button_shortcut.activated.connect(self.next_page_button.clicked)
         self.horizontalLayout.addWidget(self.next_page_button)
 
         self.verticalLayout.addLayout(self.horizontalLayout)
@@ -93,10 +100,11 @@ class Ui_MainWindow(object):
 
         self.save_data_action = self.file_menu.addAction('save_data')
         self.save_data_action.triggered.connect(action_def.save_data)
+        self.save_data_action.setShortcut(QtGui.QKeySequence("Ctrl+S"))
 
         self.output_file_action = self.file_menu.addAction('output_file')
         self.output_file_action.triggered.connect(action_def.output_file)
-
+        self.output_file_action.setShortcut(QtGui.QKeySequence("Ctrl+O"))
         # self.test_action = self.file_menu.addAction('test')
         # self.test_action.triggered.connect(action_def.test)
 
@@ -112,6 +120,7 @@ class Ui_MainWindow(object):
         self.statusbar = QtWidgets.QStatusBar(MainWindow)
         self.statusbar.setObjectName("statusbar")
         MainWindow.setStatusBar(self.statusbar)
+        global_env.statusbar = self.statusbar
 
         self.retranslateUi(MainWindow)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
@@ -139,3 +148,6 @@ class Ui_MainWindow(object):
         self.edit_rowcount_action.setText(_translate("MainWindow", "修改行数"))
         self.jump_page_action.setText(_translate("MainWindow", "跳页"))
         self.about_action.setText(_translate("MainWindow", "关于"))
+
+        # self.reverse_election_button.setShortcut(
+        #     QtCore.QCoreApplication.translate("MainWindow", u"Ctrl+S, Ctrl+D", None))

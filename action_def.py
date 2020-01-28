@@ -31,9 +31,24 @@ def window_load_file():
 
 def load_file(fileName_choose):
     logging.debug(fileName_choose)
+    if not global_env.data_saved:
+        reply = QtWidgets.QMessageBox.question(global_env.myWin,
+                                               '将打开其他文件',
+                                               "是否保存进度？",
+                                               QtWidgets.QMessageBox.Yes | QtWidgets.QMessageBox.No |
+                                               QtWidgets.QMessageBox.Cancel, QtWidgets.QMessageBox.Cancel)
+        if reply == QtWidgets.QMessageBox.Yes:
+            global_env.keep_data_store()
+            pass
+        elif reply == QtWidgets.QMessageBox.No:
+            pass
+        else:
+            return
+    else:
+        pass
 
     if not fileName_choose.lower().endswith(".xml"):
-        QtWidgets.QMessageBox.critical(global_env.myWin, '打开文件错误', "不是xml文件", QtWidgets.QMessageBox.Ok)
+        global_env.statusbar.showMessage("打开文件错误，不是xml文件")
         return
 
     dirname, filename = os.path.split(fileName_choose)
@@ -44,7 +59,7 @@ def load_file(fileName_choose):
     logging.debug(len(danmu))
 
     if len(danmu) < 1:
-        QtWidgets.QMessageBox.critical(global_env.myWin, '打开文件错误', "一条弹幕都没有哦", QtWidgets.QMessageBox.Ok)
+        global_env.statusbar.showMessage("打开文件错误，一条弹幕都没有哦")
         return
 
     global_env.recent_file = fileName_choose
@@ -54,10 +69,10 @@ def load_file(fileName_choose):
     global_env.danmu_data = danmu
 
     if not global_env.keep_data_read():
-        # QtWidgets.QMessageBox.information(global_env.myWin, '缓存未找到', "新的弹幕文件或缓存文件丢失\n》》》新创建缓存",
-        #                                   QtWidgets.QMessageBox.Ok)
+        global_env.statusbar.showMessage("缓存未找到，新的弹幕文件或缓存文件丢失》》》新创建缓存")
         global_env.keep_data_init()
     else:
+        global_env.statusbar.showMessage("打开成功，并载入缓存")
         global_env.keep_data_read()
 
     global_env.data_saved = True
@@ -82,11 +97,11 @@ def table_updata(start_num=None):
         start_num = global_env.recent_row
 
     if start_num < 0:
-        QtWidgets.QMessageBox.critical(global_env.myWin, '跳页错误', "页码为负", QtWidgets.QMessageBox.Ok)
+        global_env.statusbar.showMessage("页码已经最小")
         return
 
     if not global_env.has_danmu_text(start_num):
-        QtWidgets.QMessageBox.critical(global_env.myWin, '跳页错误', "页码过大", QtWidgets.QMessageBox.Ok)
+        global_env.statusbar.showMessage("页码已经最大")
         return
 
     recent_page = int(start_num / row_count) + 1
@@ -163,7 +178,7 @@ def tableWidgetItemClick(item):
 
 def jump_page():
     if global_env.recent_file is None:
-        QtWidgets.QMessageBox.critical(global_env.myWin, '跳页错误', "还没有打开弹幕文件", QtWidgets.QMessageBox.Ok)
+        global_env.statusbar.showMessage("跳页错误，还没有打开弹幕文件")
         return
     maxpage = int(len(global_env.danmu_data) / global_env.row_count) + 1
     num, ok = QtWidgets.QInputDialog.getInt(global_env.myWin, '跳页', '输入数字',
@@ -177,7 +192,7 @@ def jump_page():
 def previous_page():
     page, row = global_env.get_recent_page_and_row()
     if page is None:
-        QtWidgets.QMessageBox.critical(global_env.myWin, '跳页错误', "还没有打开弹幕文件", QtWidgets.QMessageBox.Ok)
+        global_env.statusbar.showMessage("跳页错误，还没有打开弹幕文件")
         return
     num = page - 1
     table_updata_by_page(num)
@@ -186,7 +201,7 @@ def previous_page():
 def next_page():
     page, row = global_env.get_recent_page_and_row()
     if page is None:
-        QtWidgets.QMessageBox.critical(global_env.myWin, '跳页错误', "还没有打开弹幕文件", QtWidgets.QMessageBox.Ok)
+        global_env.statusbar.showMessage("跳页错误，还没有打开弹幕文件")
         return
     num = page + 1
     table_updata_by_page(num)
@@ -194,7 +209,7 @@ def next_page():
 
 def save_data():
     if global_env.recent_file is None:
-        QtWidgets.QMessageBox.critical(global_env.myWin, '跳页错误', "还没有打开弹幕文件", QtWidgets.QMessageBox.Ok)
+        global_env.statusbar.showMessage("保存错误，还没有打开弹幕文件")
         return
     global_env.keep_data_store()
     QtWidgets.QMessageBox.information(global_env.myWin, '提示', "已保存", QtWidgets.QMessageBox.Ok)
@@ -202,7 +217,7 @@ def save_data():
 
 def output_file():
     if global_env.recent_file is None:
-        QtWidgets.QMessageBox.critical(global_env.myWin, '输出错误', "还没有打开弹幕文件", QtWidgets.QMessageBox.Ok)
+        global_env.statusbar.showMessage("输出错误，还没有打开弹幕文件")
         return
     file_url = os.path.join(global_env.recent_file_dir, global_env.recent_file_name[0:-4]) + '_dmke.xml'
     fileName_choose, filetype = QtWidgets.QFileDialog.getSaveFileName(global_env.myWin,
